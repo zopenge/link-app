@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import I18nProvider from '@/components/I18nProvider';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,13 +27,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <div className="p-4">
-          <LanguageSwitcher />
-        </div>
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <I18nProvider>
+          <div className="p-4">
+            <LanguageSwitcher />
+          </div>
+          {children}
+        </I18nProvider>
       </body>
     </html>
   );
