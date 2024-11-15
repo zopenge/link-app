@@ -35,8 +35,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "public/locales/**/*",
-    "middleware/**/*"
+    "public/locales/**/*"
   ],
   "exclude": [
     "node_modules"
