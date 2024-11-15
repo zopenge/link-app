@@ -1,5 +1,7 @@
 {
     "welcome": "Welcome",
+    "welcome.description": "Your gateway to amazing experiences",
     "home": "Home",
+    "about": "About",
     "login": "Login"
 }

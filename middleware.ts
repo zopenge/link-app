@@ -4,11 +4,22 @@ import jwt from 'jsonwebtoken';
 import authConfig from '@/lib/config';
 
 // Add paths that don't require authentication
-const publicPaths = ['/login', '/api/login'];
+const publicPaths = ['/login', '/api/login', '/register', '/api/register', '/welcome'];
 const languages = ['en', 'zh'];
+const staticPaths = ['/favicon.ico', '/api', '/_next', '/public', '/static', '/images', '/flags'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Skip static files and API routes
+  if (staticPaths.some(path => pathname.startsWith(path))) {
+    return NextResponse.next();
+  }
+
+  // Skip file extensions
+  if (pathname.match(/\.(svg|jpg|png|gif|ico|css|js)$/)) {
+    return NextResponse.next();
+  }
 
   // Rest of your existing middleware code...
   if (pathname.endsWith('.svg')) {
@@ -25,17 +36,24 @@ export function middleware(request: NextRequest) {
   );
 
   if (!pathnameHasLocale) {
-    // Redirect to default locale if no locale in pathname
-    const locale = request.headers.get('accept-language')?.split(',')[0].split('-')[0] || 'en';
+    // check saved language preference from cookie first
+    const savedLocale = request.cookies.get('i18nextLng')?.value;
+    const browserLocale = request.headers.get('accept-language')?.split(',')[0].split('-')[0];
+    
+    // priority: saved locale > browser locale > default 'en'
+    const locale = savedLocale || browserLocale || 'en';
     const finalLocale = languages.includes(locale) ? locale : 'en';
-    return NextResponse.redirect(new URL(`/${finalLocale}${pathname}`, request.url));
+    
+    // preserve the full pathname when redirecting
+    const fullPath = pathname === '/' ? '' : pathname;
+    return NextResponse.redirect(new URL(`/${finalLocale}${fullPath}`, request.url));
   }
 
   const token = request.cookies.get('auth_token')?.value;
 
   if (!token) {
     const locale = pathname.split('/')[1];
-    return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
+    return NextResponse.redirect(new URL(`/${locale}/welcome`, request.url));
   }
 
   try {
@@ -52,6 +70,9 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|public/).*)',
+    // Skip all internal paths (_next)
+    // Skip all api routes
+    // Skip all static files (favicon.ico, images, etc)
+    '/((?!api|_next/static|_next/image|favicon.ico|images|flags).*)',
   ],
 }; 

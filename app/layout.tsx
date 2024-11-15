@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import LanguageSwitcher from '@/components/LanguageSwitcher';
+import Navbar from '@/components/Navbar';
 import I18nProvider from '@/components/I18nProvider';
 
 const geistSans = localFont({
@@ -29,10 +29,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <I18nProvider>
-          <div className="fixed top-4 right-4 z-50">
-            <LanguageSwitcher />
-          </div>
-          {children}
+          <Navbar />
+          <main className="pt-16">
+            {children}
+          </main>
         </I18nProvider>
       </body>
     </html>

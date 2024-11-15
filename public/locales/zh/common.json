@@ -1,5 +1,7 @@
 {
     "welcome": "欢迎",
+    "welcome.description": "通往精彩体验的门户",
     "home": "首页",
+    "about": "关于",
     "login": "登录"
 }

@@ -9,7 +9,14 @@ export default function I18nProvider({ children }: PropsWithChildren) {
   const pathname = usePathname();
   
   useEffect(() => {
-    const locale = pathname?.split('/')[1] || 'en';
+    // Get language from pathname or localStorage or default to 'en'
+    const pathLocale = pathname?.split('/')[1];
+    const savedLocale = localStorage.getItem('i18nextLng');
+    const locale = pathLocale || savedLocale || 'en';
+    
+    // Save the language preference
+    localStorage.setItem('i18nextLng', locale);
+    
     i18n.changeLanguage(locale).then(() => {
       setIsI18nInitialized(true);
     });
