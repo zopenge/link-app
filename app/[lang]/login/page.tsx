@@ -1,13 +1,16 @@
 'use client';
 
+import '@/lib/i18n-client';
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+  const { t } = useTranslation(['common']);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -38,6 +41,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
+        <h1>{t('welcome')}</h1>
+    <p>{t('home')}</p>
           <Image
             className="mx-auto dark:invert"
             src="/next.svg"

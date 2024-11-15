@@ -10,6 +10,15 @@ const languages = ['en', 'zh'];
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Rest of your existing middleware code...
+  if (pathname.endsWith('.svg')) {
+    return NextResponse.next();
+  }
+
+  if (publicPaths.some(path => pathname.includes(path))) {
+    return NextResponse.next();
+  }
+
   // Handle i18n routing
   const pathnameHasLocale = languages.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
@@ -20,15 +29,6 @@ export function middleware(request: NextRequest) {
     const locale = request.headers.get('accept-language')?.split(',')[0].split('-')[0] || 'en';
     const finalLocale = languages.includes(locale) ? locale : 'en';
     return NextResponse.redirect(new URL(`/${finalLocale}${pathname}`, request.url));
-  }
-
-  // Rest of your existing middleware code...
-  if (pathname.endsWith('.svg')) {
-    return NextResponse.next();
-  }
-
-  if (publicPaths.some(path => pathname.includes(path))) {
-    return NextResponse.next();
   }
 
   const token = request.cookies.get('auth_token')?.value;
