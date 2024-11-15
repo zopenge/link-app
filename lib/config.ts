@@ -9,8 +9,13 @@ function generateRandomHex(length = 32) {
 const defaultSecret = generateRandomHex(64);
 
 // Safely get environment variable with fallback
-const getEnvVar = (key: string, defaultValue: any = undefined) =>
-    ((process.env || {})[key] || defaultValue);
+const getEnvVar = (key: string, defaultValue: string | number | undefined = undefined): string | number | undefined => {
+    const value = (process.env || {})[key] || defaultValue;
+    if (typeof defaultValue === 'number') {
+        return parseInt(value as string, 10);
+    }
+    return value;
+};
 
 // Create configuration with fallbacks
 const authConfig = {
@@ -34,10 +39,10 @@ const authConfig = {
 
     // JWT config
     jwt: {
-        secret: getEnvVar('JWT_SECRET', defaultSecret),
-        expirationTime: getEnvVar('JWT_EXPIRATION', '24h'),
-        issuer: getEnvVar('JWT_ISSUER', 'unknown'),
-        algorithm: getEnvVar('JWT_ALGORITHM', 'HS256')
+        secret: getEnvVar('JWT_SECRET', defaultSecret) as string,
+        expirationTime: getEnvVar('JWT_EXPIRATION', '24h') as string,
+        issuer: getEnvVar('JWT_ISSUER', 'unknown') as string,
+        algorithm: getEnvVar('JWT_ALGORITHM', 'HS256') as string
     },
 
     // Encryption config
@@ -52,8 +57,8 @@ const authConfig = {
         provider: getEnvVar('AI_PROVIDER', 'default'),
         apiKey: getEnvVar('AI_API_KEY'),
         options: {
-            maxRetries: parseInt(getEnvVar('AI_MAX_RETRIES', '3')),
-            timeout: parseInt(getEnvVar('AI_TIMEOUT', '30000'))
+            maxRetries: getEnvVar('AI_MAX_RETRIES', 3),
+            timeout: getEnvVar('AI_TIMEOUT', 30000)
         }
     }
 };

@@ -1,19 +1,27 @@
-import { cookies } from 'next/headers';
 import { getCookie, setCookie, deleteCookie } from 'cookies-next';
-import type { CookieOptions } from 'cookies-next/lib/types';
 import authConfig from './config';
+
+// Define the type directly in your code
+type CookieOptions = {
+  path?: string;
+  secure?: boolean;
+  sameSite?: 'strict' | 'lax' | 'none';
+  httpOnly?: boolean;
+  maxAge?: number;
+};
 
 const TOKEN_NAME = 'auth_token';
 
-// Cookie default options
+// Define default cookie options
 const defaultOptions: CookieOptions = {
   path: '/',
   secure: authConfig.session.secure,
   sameSite: 'lax',
   httpOnly: true,
-  maxAge: 60 * 60 * 24 // 24 hours
+  maxAge: 60 * 60 * 24, // 24 hours
 };
 
+// Client-side cookie operations
 export const setAuthToken = (token: string, options?: CookieOptions) => {
   setCookie(TOKEN_NAME, token, {
     ...defaultOptions,
@@ -32,15 +40,16 @@ export const removeAuthToken = () => {
 // Server-side cookie operations
 export const serverCookies = {
   set: (name: string, value: string, options?: CookieOptions) => {
-    cookies().set(name, value, {
+    // Use next/headers cookies API for server-side
+    setCookie(name, value, {
       ...defaultOptions,
       ...options,
     });
   },
   get: (name: string) => {
-    return cookies().get(name)?.value;
+    return getCookie(name);
   },
   delete: (name: string) => {
-    cookies().delete(name);
-  }
-}; 
+    deleteCookie(name);
+  },
+};

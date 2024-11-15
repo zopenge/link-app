@@ -9,6 +9,11 @@ const publicPaths = ['/login', '/api/login'];
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Ignore SVG files in the middleware
+  if (pathname.endsWith('.svg')) {
+    return NextResponse.next();
+  }
+
   // Skip authentication for public paths
   if (publicPaths.includes(pathname)) {
     return NextResponse.next();
@@ -27,7 +32,7 @@ export function middleware(request: NextRequest) {
       issuer: authConfig.jwt.issuer,
       algorithms: [authConfig.jwt.algorithm as jwt.Algorithm],
     });
-    
+
     return NextResponse.next();
   } catch (error) {
     // Token is invalid or expired

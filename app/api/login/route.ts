@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
     // Generate JWT token
     const token = jwt.sign(
-      { 
+      {
         email,
         // Add any additional user data you want to include
       },
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       {
         expiresIn: authConfig.jwt.expirationTime,
         issuer: authConfig.jwt.issuer,
-        algorithm: authConfig.jwt.algorithm as jwt.Algorithm,
+        algorithm: authConfig.jwt.algorithm as jwt.Algorithm
       }
     );
 

@@ -9,7 +9,7 @@ export async function POST() {
       { message: 'Logout successful' },
       { status: 200 }
     );
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { message: 'Logout failed' },
       { status: 400 }
