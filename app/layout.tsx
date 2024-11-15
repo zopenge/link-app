@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <I18nProvider>
-          <div className="p-4">
+          <div className="fixed top-4 right-4 z-50">
             <LanguageSwitcher />
           </div>
           {children}

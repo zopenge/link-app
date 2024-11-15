@@ -10,7 +10,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
     "cookies-next": "^5.0.2",
+    "country-flag-icons": "^1.5.13",
     "i18next": "^23.16.5",
     "jsonwebtoken": "^9.0.2",
     "next": "15.0.3",
