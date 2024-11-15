@@ -1,6 +1,5 @@
 'use client';
 
-import '@/lib/i18n-client';
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';

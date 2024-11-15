@@ -7,6 +7,6 @@ const nextConfig: NextConfig = {
     AI_PROVIDER: process.env.AI_PROVIDER || 'default',
     AI_API_KEY: process.env.AI_API_KEY || ''
   }
-};
+}
 
 export default nextConfig;

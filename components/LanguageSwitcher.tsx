@@ -6,7 +6,6 @@ import { GB, CN } from 'country-flag-icons/react/3x2';
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { setCookie } from 'cookies-next';
-import '../lib/i18n-client';
 
 const languages = [
     {
