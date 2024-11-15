@@ -5,50 +5,53 @@ import authConfig from '@/lib/config';
 
 // Add paths that don't require authentication
 const publicPaths = ['/login', '/api/login'];
+const languages = ['en', 'zh'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Ignore SVG files in the middleware
+  // Handle i18n routing
+  const pathnameHasLocale = languages.some(
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+  );
+
+  if (!pathnameHasLocale) {
+    // Redirect to default locale if no locale in pathname
+    const locale = request.headers.get('accept-language')?.split(',')[0].split('-')[0] || 'en';
+    const finalLocale = languages.includes(locale) ? locale : 'en';
+    return NextResponse.redirect(new URL(`/${finalLocale}${pathname}`, request.url));
+  }
+
+  // Rest of your existing middleware code...
   if (pathname.endsWith('.svg')) {
     return NextResponse.next();
   }
 
-  // Skip authentication for public paths
-  if (publicPaths.includes(pathname)) {
+  if (publicPaths.some(path => pathname.includes(path))) {
     return NextResponse.next();
   }
 
-  // Get token from cookie
   const token = request.cookies.get('auth_token')?.value;
 
   if (!token) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    const locale = pathname.split('/')[1];
+    return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
   }
 
   try {
-    // Verify JWT token
     jwt.verify(token, authConfig.jwt.secret, {
       issuer: authConfig.jwt.issuer,
       algorithms: [authConfig.jwt.algorithm as jwt.Algorithm],
     });
-
     return NextResponse.next();
-  } catch (error) {
-    // Token is invalid or expired
-    return NextResponse.redirect(new URL('/login', request.url));
+  } catch {
+    const locale = pathname.split('/')[1];
+    return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
   }
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    '/((?!_next/static|_next/image|favicon.ico|public/).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|public/).*)',
   ],
 }; 

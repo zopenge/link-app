@@ -1,5 +1,12 @@
-export const i18n = {
-    locales: ['en', 'zh'],
-    defaultLocale: 'en',
-    localeDetection: false as const
+import type { UserConfig } from 'next-i18next';
+
+const i18nConfig: UserConfig = {
+    i18n: {
+        locales: ['en', 'zh'],
+        defaultLocale: 'en',
+    },
+    ns: ['common'],
+    defaultNS: 'common',
 };
+
+export default i18nConfig;

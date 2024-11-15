@@ -1,8 +1,6 @@
 import type { NextConfig } from "next";
-import { i18n } from './next-i18next.config';
 
 const nextConfig: NextConfig = {
-  i18n,
   env: {
     SUPABASE_URL: process.env.SUPABASE_URL || '',
     SUPABASE_KEY: process.env.SUPABASE_KEY || '',
